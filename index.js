@@ -1,12 +1,12 @@
 const express = require("express");
 const cors = require("cors");
-
 const connectMongoDB = require("./src/config/database");
 const { handlerError, notFound } = require("./src/utils/errorHandler");
+const authRouter = require("./src/routes/authRouter");
 
 require("dotenv").config();
-
 app = express();
+
 
 const middleware = [
   express.json(),
@@ -18,11 +18,12 @@ const middleware = [
 app.use(middleware);
 
 
+
 const start = async () => {
   //database connect 
   await connectMongoDB();
 
-
+  app.use("/api/auth", authRouter);
 
   app.get("/", (req, res) => {
     res.json({message:"server is running"})
