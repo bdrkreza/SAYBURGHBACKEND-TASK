@@ -18,20 +18,25 @@ const ArticleController = {
     //Get single article controller
     getSingleArticle: async (req, res) => {
         try {
-
+            const { id } = req.params
+            const article = await Article.findById({ _id: id });
+            if (!article) {
+                return res.status(400).json({ message: "Article not found" });
+            }
+            res.status(200).json({ article: article });
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
     },
 
-    //CREATE POST
+    //CREATE article controller
     createArticle: async (req, res, next) => {
         try {
-            const { title, text, tagList } = req.body;
+            const { title, text, tagList, image } = req.body;
 
             const newArticle = new Article({
                 user: req.User,
-                title, text, tagList
+                title, text, tagList, image
             })
 
             const article = await newArticle.save();
@@ -45,7 +50,21 @@ const ArticleController = {
     //update  article controller
     updateArticle: async (req, res) => {
         try {
-
+            const { id } = req.params;
+            const article = await Article.findById({ _id: id })
+            if (article) {
+                const updatedArticle = await Article.findByIdAndUpdate(
+                    id,
+                    {
+                        $set: req.body,
+                    }, {
+                    new: true
+                }
+                )
+                res.status(200).json({ article: updatedArticle });
+            } else {
+                return res.status(200).json({ message: 'No article found with this Id!' });
+            }
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
@@ -54,7 +73,13 @@ const ArticleController = {
     //delete  article controller
     deleteArticle: async (req, res) => {
         try {
-
+            const article = await Article.findById(req.params.id);
+            if (article) {
+                await article.remove();
+                return res.status(200).json({ message: 'article Deleted successfully!' });
+            } else {
+                return res.status(200).json({ message: 'No article found with this Id!' });
+            }
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
@@ -63,16 +88,19 @@ const ArticleController = {
     //user comment create post
     createArticleComment: async (req, res) => {
         try {
-
             const { id } = req.params;
             const article = await Article.findById(id);
-            console.log(article);
-            const comment = {
-                comment: req.body.comment,
+
+            if (article) {
+                const comment = {
+                    comment: req.body.comment,
+                }
+                article.comments.push(comment);
+                const saveArticle = await article.save();
+                res.status(200).json({ article: saveArticle });
+            } else {
+                return res.status(200).json({ message: 'article not found with this Id!' });
             }
-            article.comments.push(comment);
-            const saveArticle = await article.save();
-            res.status(200).json({ article: saveArticle });
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }

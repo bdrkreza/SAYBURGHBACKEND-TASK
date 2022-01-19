@@ -12,9 +12,10 @@ const authProtect = (req, res, next) => {
         req.userId = userId;
         next();
     } catch (err) {
-        next("Authentication failure!");
-    }
+        return res.status(400).json({ message: "Authentication failure!"})
 
+    }
+    next();
 }
 
 module.exports = authProtect;

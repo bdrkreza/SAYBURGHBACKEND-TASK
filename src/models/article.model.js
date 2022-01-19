@@ -23,6 +23,7 @@ const ArticleSchema = new mongoose.Schema({
         type: ObjectId,
         ref: "User",
     },
+    
     image: {
         type: String,
         default: "image"
