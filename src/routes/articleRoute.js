@@ -3,8 +3,13 @@ const authProtect = require("../middleware/auth.middleware");
 
 const router = require("express").Router();
 
-router.route("/").post(ArticleController.CreateArticle);
-router.route("/comment/:id").post(authProtect, ArticleController.CreateArticleComment);
-router.route("/").get(ArticleController.GetArticle);
+
+router.route("/").get(ArticleController.getArticle);
+router.route("/:id").get(ArticleController.getSingleArticle);
+router.route("/").post(ArticleController.createArticle);
+router.route("/:id").post(ArticleController.updateArticle);
+router.route("/:id").delete(ArticleController.deleteArticle);
+
+router.route("/comment/:id").post(authProtect, ArticleController.createArticleComment);
 
 module.exports = router;

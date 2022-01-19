@@ -4,8 +4,28 @@ const Article = require("../models/article.model");
 
 
 const ArticleController = {
+    //Get  article controller
+    getArticle: async (req, res) => {
+        try {
+            const query = req.query;
+            const article = await Article.find(query);
+            res.status(200).json({ article: article });
+        } catch (error) {
+            return res.status(500).json({ message: error.message });
+        }
+    },
+
+    //Get single article controller
+    getSingleArticle: async (req, res) => {
+        try {
+
+        } catch (error) {
+            return res.status(500).json({ message: error.message });
+        }
+    },
+
     //CREATE POST
-    CreateArticle: async (req, res, next) => {
+    createArticle: async (req, res, next) => {
         try {
             const { title, text, tagList } = req.body;
 
@@ -22,21 +42,26 @@ const ArticleController = {
         }
     },
 
-    //Get  article controller
-    GetArticle: async (req, res) => {
+    //update  article controller
+    updateArticle: async (req, res) => {
         try {
-            const query = req.query;
-            const article = await Article.find(query);
-            res.status(200).json({ article: article });
+
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
     },
 
-    
+    //delete  article controller
+    deleteArticle: async (req, res) => {
+        try {
+
+        } catch (error) {
+            return res.status(500).json({ message: error.message });
+        }
+    },
 
     //user comment create post
-    CreateArticleComment: async (req, res) => {
+    createArticleComment: async (req, res) => {
         try {
 
             const { id } = req.params;
