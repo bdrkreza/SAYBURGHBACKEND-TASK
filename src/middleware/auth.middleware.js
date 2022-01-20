@@ -1,9 +1,10 @@
-const req = require("express/lib/request");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.Model");
 
 
 const auth = {
+
+    //Middleware used to protect routes from unauthorized users
     user: (req, res, next) => {
         try {
             const { authorization } = req.headers;
@@ -17,6 +18,7 @@ const auth = {
         }
     },
 
+    //Middleware used to protect routes from users who are not flagged as admin
     admin: async (req, res, next) => {
         try {
             const user = await User.findOne({
@@ -33,8 +35,8 @@ const auth = {
         } catch (error) {
             return res.status(400).json({ message: "Authentication failure!" })
         }
-    }
-}
+    },
+};
 
 
 module.exports = auth;

@@ -4,7 +4,8 @@ const { ObjectId } = mongoose.Schema;
 const commentSchema = new mongoose.Schema({
     user: {
         type: ObjectId,
-        ref: "User",
+        required:true,
+        ref: 'User'
     },
     comment: {
         type: String,
@@ -15,14 +16,14 @@ const commentSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
-})
+});
 
 const ArticleSchema = new mongoose.Schema({
     user: {
         type: ObjectId,
         ref: "User",
     },
-    
+
     image: {
         type: String,
         default: "image"
@@ -35,7 +36,7 @@ const ArticleSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    tagList: [{ type: String }],
+    tags: [{ type: String }],
     comments: [commentSchema],
 },
     { timestamps: true }

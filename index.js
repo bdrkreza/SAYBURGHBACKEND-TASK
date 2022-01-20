@@ -29,10 +29,6 @@ const start = async () => {
   app.use("/api/user", userRoute);
   app.use("/api/article", articleRouter);
 
-  app.get("/", (req, res) => {
-    res.json({ message: "server is running" })
-  })
-
   //Error handler route
   app.use(notFound);
 

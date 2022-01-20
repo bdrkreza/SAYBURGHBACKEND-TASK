@@ -4,7 +4,11 @@ const Article = require("../models/article.model");
 
 
 const ArticleController = {
-    //Get  article controller
+    /**
+         * Fetch all article
+         * @route GET /api/article
+         * @access Public
+    */
     getArticle: async (req, res) => {
         try {
             const query = req.query;
@@ -15,7 +19,11 @@ const ArticleController = {
         }
     },
 
-    //Get single article controller
+    /**
+       * Fetch single article
+       * @route GET /api/article/:id
+       * @access Public
+    */
     getSingleArticle: async (req, res) => {
         try {
             const { id } = req.params
@@ -29,14 +37,18 @@ const ArticleController = {
         }
     },
 
-    //CREATE article controller
+    /**
+         * Fetch create article
+         * @route post /api/article
+         * @access private/admin
+      */
     createArticle: async (req, res, next) => {
         try {
-            const { title, text, tagList, image } = req.body;
+            const { title, text, tags, image } = req.body;
 
             const newArticle = new Article({
-                user: req.User,
-                title, text, tagList, image
+                user: req.user.id,
+                title, text, tags, image
             })
 
             const article = await newArticle.save();
@@ -47,7 +59,11 @@ const ArticleController = {
         }
     },
 
-    //update  article controller
+    /**
+       * Fetch update article
+       * @route put /api/article/:id
+       * @access private/admin
+    */
     updateArticle: async (req, res) => {
         try {
             const { id } = req.params;
@@ -70,7 +86,11 @@ const ArticleController = {
         }
     },
 
-    //delete  article controller
+    /**
+          * Fetch delete article
+          * @route delete /api/article/:id
+          * @access private/admin
+       */
     deleteArticle: async (req, res) => {
         try {
             const article = await Article.findById(req.params.id);
@@ -78,24 +98,32 @@ const ArticleController = {
                 await article.remove();
                 return res.status(200).json({ message: 'article Deleted successfully!' });
             } else {
-                return res.status(200).json({ message: 'No article found with this Id!' });
+                return res.status(200).json({ message: 'article not found with this Id!' });
             }
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
     },
 
-    //user comment create post
+
+    /**
+         * @description Create a new comment
+         * @route POST /api/article/comment/:id
+         * @access Private
+     */
     createArticleComment: async (req, res) => {
         try {
             const { id } = req.params;
+            const comment = req.body.comment
             const article = await Article.findById(id);
 
             if (article) {
-                const comment = {
-                    comment: req.body.comment,
+
+                const comments = {
+                    user: req.user.id,
+                    comment: comment
                 }
-                article.comments.push(comment);
+                article.comments.push(comments);
                 const saveArticle = await article.save();
                 res.status(200).json({ article: saveArticle });
             } else {
