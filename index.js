@@ -4,6 +4,7 @@ const connectMongoDB = require("./src/config/database");
 const { handlerError, notFound } = require("./src/utils/errorHandler");
 const authRouter = require("./src/routes/authRouter");
 const articleRouter = require("./src/routes/articleRoute");
+const userRoute = require("./src/routes/userRoute");
 
 require("dotenv").config();
 app = express();
@@ -24,7 +25,8 @@ const start = async () => {
   //database connect 
   await connectMongoDB();
 
-  app.use("/api", authRouter);
+  app.use("/api/auth", authRouter);
+  app.use("/api/user", userRoute);
   app.use("/api/article", articleRouter);
 
   app.get("/", (req, res) => {

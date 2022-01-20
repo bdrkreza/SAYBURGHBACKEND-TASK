@@ -1,21 +1,40 @@
 const req = require("express/lib/request");
 const jwt = require("jsonwebtoken");
+const User = require("../models/user.Model");
 
 
-const authProtect = (req, res, next) => {
-    const { authorization } = req.headers;
-    try {
-        const token = authorization.split(' ')[1];
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const { email, userId } = decoded;
-        req.email = email;
-        req.userId = userId;
-        next();
-    } catch (err) {
-        return res.status(400).json({ message: "Authentication failure!"})
+const auth = {
+    user: (req, res, next) => {
+        try {
+            const { authorization } = req.headers;
+            const token = authorization.split(' ')[1];
+            const user = jwt.verify(token, process.env.JWT_SECRET);
+            req.user = user;
+            next();
+        } catch (err) {
+            return res.status(400).json({ message: "Authentication failure!" })
 
+        }
+    },
+
+    admin: async (req, res, next) => {
+        try {
+            const user = await User.findOne({
+                _id: req.user.id
+            })
+            if (user.role !== 'admin' && user.email === req.user.email) { // assuming you pass user info
+                return res.status(403).json({
+                    status: 'fail',
+                    message: 'Unauthorized to access this route'
+                })
+            }
+            next();
+
+        } catch (error) {
+            return res.status(400).json({ message: "Authentication failure!" })
+        }
     }
-    next();
 }
 
-module.exports = authProtect;
+
+module.exports = auth;

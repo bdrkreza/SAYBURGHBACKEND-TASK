@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
+
 const commentSchema = new mongoose.Schema({
     user: {
         type: ObjectId,
@@ -15,8 +16,6 @@ const commentSchema = new mongoose.Schema({
         default: Date.now
     }
 })
-
-
 
 const ArticleSchema = new mongoose.Schema({
     user: {

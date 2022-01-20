@@ -4,6 +4,11 @@ const authRouter = require("../routes/authRouter");
 const generateToken = require("../utils/generateToken");
 
 const authController = {
+    /**
+     * Register a new user
+     * @route POST /api/auth/register
+     * @access Public
+     */
     register: async (req, res) => {
         try {
             const { name, email, password } = req.body;
@@ -24,14 +29,19 @@ const authController = {
                 email: user.email,
                 role: user.role
             }
-            const access_token = generateToken({user: payload });
-            res.json({user, token: access_token,  });
+            const access_token = generateToken({ user: payload });
+            res.json({ user, token: access_token, });
         } catch (error) {
 
             return res.status(500).json({ message: error.message });
         }
     },
-
+    
+    /**
+     * Authenticate user and get token
+     * @route POST /api/auth/login
+     * @access Public
+     */
     login: async (req, res) => {
         try {
             const { email, password } = req.body;
@@ -50,7 +60,7 @@ const authController = {
                 email: user.email,
                 role: user.role
             }
-            const access_token = generateToken({ payload });
+            const access_token = generateToken(payload);
 
             res.json({ user, token: access_token });
 
