@@ -1,0 +1,37 @@
+query user{
+  users {
+    name
+    email
+    image
+
+  }
+}
+
+...................
+query article{
+  articles {
+  title
+  image
+    comments {
+      user
+      comment
+    }
+  }
+}
+}
+
+mutation
+.......................
+mutation register($newUser: UserInput!){
+  registerUser(newUser: $newUser) {
+accessToken
+refreshToken
+  }
+}
+
+mutation login($email: String!, $password: String!){
+  login(email: $email, password: $password) {
+accessToken
+refreshToken
+  }
+}
